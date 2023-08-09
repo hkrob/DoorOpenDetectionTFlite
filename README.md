@@ -36,6 +36,16 @@ Door Open Detection using DOODS, TensorflowLite and Home Assistant
   labelsStartFromZero: true
 ```
 
+If DOODS has loaded your model correctly, you should see something like this in the logs
+```
+2023-08-09 11:31:33,274 - doods.doods - INFO - Registered detector type:tflite name:garagedoortf
+2023-08-09 11:31:33,320 - uvicorn.error - INFO - Started server process [7]
+2023-08-09 11:31:33,321 - uvicorn.error - INFO - Waiting for application startup.
+2023-08-09 11:31:33,321 - uvicorn.error - INFO - Application startup complete.
+2023-08-09 11:31:33,322 - uvicorn.error - INFO - Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+```
+
+
 # Home Assistant
 * There are a few steps here, first is to capture the input data to train your model
 
