@@ -130,8 +130,8 @@ friendly_name: Doods camera_proxy_camera_ha_prod_northcliffe_front
 ```
 
 * In order to work with the above, we will create some sensors with just the data we want
-** DoodsNorthcliffeGaragePersonClosed / DoodsNorthcliffeGaragePersonOpen - these are the confidence scores for open/closed
-** We've also created doods-garage-persondoor which is going to show open/closed/unknown based on the confidence score, you can fine-tune this to match your desired confidence level
+* DoodsNorthcliffeGaragePersonClosed / DoodsNorthcliffeGaragePersonOpen - these are the confidence scores for open/closed
+* We've also created doods-garage-persondoor which is going to show open/closed/unknown based on the confidence score, you can fine-tune this to match your desired confidence level
 
 
 ```
@@ -168,7 +168,9 @@ template:
 ```
 
 The above will create sensors that look like this:
+
 ![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/e7e88217-f0df-4b32-8a63-fb8243745bba)
+
 With this model, 25500 is the maximum, i.e. 100% confidence
 
 I want to smooth the sensor, so I've created yet another sensor
@@ -199,8 +201,10 @@ sensor:
 Model from Teachable Machine
 * Using [Teachable Machine]([url](https://teachablemachine.withgoogle.com/)) ...
 * Create a model with two classes, open and closed
+* 
 ![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/8a97e755-f8d4-4590-8282-7cb340670176)
 
 * Use the training data you have collected with Home Assistant
 * Export a Tensorflow Lite Quantized model
+* 
 ![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/d3bfb113-bb4b-4cc9-92e6-ff26bcab200f)
