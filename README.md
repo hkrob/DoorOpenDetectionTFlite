@@ -54,6 +54,15 @@ If DOODS has loaded your model correctly, you should see something like this in 
 2023-08-09 11:31:33,321 - uvicorn.error - INFO - Application startup complete.
 2023-08-09 11:31:33,322 - uvicorn.error - INFO - Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 ```
+* Doods has a handy GUI where you can check your model is loaded and working correctly
+
+* This is what you get if you click Detect Image
+
+![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/44c34c15-8860-44bf-acdf-e53c43d461b1)
+
+* And this is Detect JSON
+
+![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/70085040-11e4-4f15-b496-0fd498781083)
 
 
 # Home Assistant
