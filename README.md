@@ -12,6 +12,16 @@ Door Open Detection using DOODS, TensorflowLite and Home Assistant
 * DOODS v2 Add-on - https://github.com/snowzach/doods2
 * Tensorflow Lite model from Teachable Machine (Google) https://teachablemachine.withgoogle.com/
 
+# Suggested Sequence
+* To get all this running, I suggest going step by step and getting the following working
+[ ] Home Assistant up and running
+[ ] Sample data (images) captured
+[ ] Model created with Teachable Machine
+[ ] DOODS add-on started and running with your model
+[ ] Home Assistant sensors created
+[ ] Home Assistant Automations created
+ 
+
 # Preparation
 * Home Assistant is installed and working
 * Sample data has been captured (see Home Assistant section below)
