@@ -1,32 +1,33 @@
 # Door Open Detection with TFlite
 Door Open Detection using DOODS, TensorflowLite and Home Assistant
 
-Objective
+# Objective
 * Detect open/closed status of a door using a camera feed
 * Connect to Home Assistant, enable automations based on state of the door
 
-Ingredients
+# Ingredients
 * Camera facing the door (provides RTSP stream)
 * Home Assistant - https://www.home-assistant.io/
 * DOODS v2 Add-on - https://github.com/snowzach/doods2
 * Tensorflow Lite model from Teachable Machine (Google) https://teachablemachine.withgoogle.com/
 
-Preparation
+# Preparation
 * Home Assistant is installed and working
 * Sample data has been captured (see Home Assistant section below)
 * Tensorflow Lite model has been created
 * DOODS v2 is installed and working
 
-Flow
+# Flow
 * Camera captures image
 * Image is processed by DOODS
 * Sensors are updated in Home Assistant
 
-DOODS config
+# DOODS config
 * The models from Teachable Machine have been placed in \\192.168.x.x\share\models\tflite-quant
 * Add-on configuration:
 
-```- name: garagedoortf
+```
+- name: garagedoortf
   type: tflite
   modelFile: /share/models/tflite-quant/model.tflite
   labelFile: /share/models/tflite-quant/labels.txt
@@ -34,9 +35,10 @@ DOODS config
   labelsStartFromZero: true
 ```
 
-Home Assistant
-There are a few steps here, first is to capture the input data to train your model
+# Home Assistant
+* There are a few steps here, first is to capture the input data to train your model
 
+## Create a Camera
 * First, create a camera which is focussed on the area you want to monitor, in this case, the door
 * Teachable Machine expects a square shaped input, so make sure the height/width are the same
 
@@ -49,6 +51,7 @@ There are a few steps here, first is to capture the input data to train your mod
     image_left: 102
     image_top: 1182
 ```
+## Gather training data
 * I've created an automation to take a snapshot every minute
 * You will want to run this for a couple of days to gather enough training data
 * Also, try to open/close the door now and then so you can get samples of both
@@ -73,7 +76,7 @@ mode: single
 ```
 
 * My training data looks like this:
-** Closed
+* Closed
 
 ![front_20230802-191800](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/0d51b79e-81e3-4aef-8c67-359551901e16)
 
@@ -81,10 +84,10 @@ mode: single
 
 ![front_20230803-113600](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/be8bc8f7-7612-425e-aded-80177ac2db66)
 
-
+# Image Processing
 * Call DOODS via the image processing integration
-** The below will send the image to Doods every 10 seconds
-** The labels will need to be the same as you set in Teachable Machine
+* The below will send the image to Doods every 10 seconds
+* The labels will need to be the same as you set in Teachable Machine
 
 ```
 image_processing:
@@ -102,7 +105,7 @@ image_processing:
       - name: open
 ```
 
-Image Processing will give you a sensor that looks like this:
+* Image Processing will give you a sensor that looks like this:
 ```
 matches: 
 open:
@@ -128,6 +131,8 @@ total_matches: 2
 process_time: 0.05038406798848882
 friendly_name: Doods camera_proxy_camera_ha_prod_northcliffe_front
 ```
+
+# Sensors (and more sensors)
 
 * In order to work with the above, we will create some sensors with just the data we want
 * DoodsNorthcliffeGaragePersonClosed / DoodsNorthcliffeGaragePersonOpen - these are the confidence scores for open/closed
@@ -167,14 +172,14 @@ template:
 #
 ```
 
-The above will create sensors that look like this:
+* The above will create sensors that look like this:
 
 ![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/e7e88217-f0df-4b32-8a63-fb8243745bba)
 
-With this model, 25500 is the maximum, i.e. 100% confidence
+* With this model, 25500 is the maximum, i.e. 100% confidence
 
-I want to smooth the sensor, so I've created yet another sensor
-For more details on this, check the documentation https://www.home-assistant.io/integrations/filter/
+* I want to smooth the sensor in order to avoid spikes/troughs , so I've created yet another sensor
+* For more details on options here, check the documentation https://www.home-assistant.io/integrations/filter/
 ```
 sensor:
   - platform: filter
@@ -201,8 +206,8 @@ sensor:
 
 ![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/db98fa55-658f-443d-af2a-111123d42254)
 
-* Notifications
-You might want notifications when something happens, here I am sending a notification via Telegram, including a snapshot of the current camera status
+# Notifications
+* You might want notifications when something happens, here I am sending a notification via Telegram, including a snapshot of the current camera status
 
 ```
 alias: Doods - Notify
@@ -229,14 +234,13 @@ action:
         trigger.from_state.state }} to {{ trigger.to_state.state }}
 mode: single
 ```
-
-Model from Teachable Machine
-* Using [Teachable Machine]([url](https://teachablemachine.withgoogle.com/)) ...
+# Teachable Machine
+* Using [Teachable Machine]([url](https://teachablemachine.withgoogle.com/)) You will create a model from Teachable Machine
 * Create a model with two classes, open and closed
-* 
+
 ![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/8a97e755-f8d4-4590-8282-7cb340670176)
 
 * Use the training data you have collected with Home Assistant
 * Export a Tensorflow Lite Quantized model
-* 
+
 ![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/d3bfb113-bb4b-4cc9-92e6-ff26bcab200f)
