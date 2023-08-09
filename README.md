@@ -7,7 +7,7 @@ Objective
 
 Ingredients
 * Camera facing the door (provides RTSP stream)
-* Home Assistant
+* Home Assistant - https://www.home-assistant.io/
 * DOODS v2 Add-on - https://github.com/snowzach/doods2
 * Tensorflow Lite model from Teachable Machine (Google) https://teachablemachine.withgoogle.com/
 
