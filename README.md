@@ -92,10 +92,36 @@ image_processing:
       - name: open
 '''
 
+Image Processing will give you a sensor that looks like this:
+'''
+matches: 
+open:
+  - score: 25500
+    box:
+      - 0
+      - 0
+      - 1
+      - 1
+closed:
+  - score: 0
+    box:
+      - 0
+      - 0
+      - 1
+      - 1
 
+summary: 
+open: 1
+closed: 1
 
-* Create some sensors
-** DoodsNorthcliffeGaragePersonClosed / DoodsNorthcliffeGaragePersonOpen - these are the 
+total_matches: 2
+process_time: 0.05038406798848882
+friendly_name: Doods camera_proxy_camera_ha_prod_northcliffe_front
+'''
+
+* In order to work with the above, we will create some sensors with just the data we want
+** DoodsNorthcliffeGaragePersonClosed / DoodsNorthcliffeGaragePersonOpen - these are the confidence scores for open/closed
+** We've also created doods-garage-persondoor which is going to show open/closed/unknown based on the confidence score, you can fine-tune this to match your desired confidence level
 
 
 '''
