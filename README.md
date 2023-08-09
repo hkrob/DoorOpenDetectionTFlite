@@ -105,12 +105,11 @@ action:
 mode: single
 ```
 
-* My training data looks like this:
-* Closed
+### Training data for Closed
 
 ![front_20230802-191800](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/0d51b79e-81e3-4aef-8c67-359551901e16)
 
-** Open
+### Training data for Open
 
 ![front_20230803-113600](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/be8bc8f7-7612-425e-aded-80177ac2db66)
 
