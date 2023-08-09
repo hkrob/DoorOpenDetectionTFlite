@@ -4,6 +4,7 @@ Door Open Detection using DOODS, TensorflowLite and Home Assistant
 # Objective
 * Detect open/closed status of a door using a camera feed
 * Connect to Home Assistant, enable automations based on state of the door
+* Can be run without a Google Coral, i.e. on a normal CPU
 
 # Ingredients
 * Camera facing the door (provides RTSP stream)
@@ -14,8 +15,8 @@ Door Open Detection using DOODS, TensorflowLite and Home Assistant
 # Preparation
 * Home Assistant is installed and working
 * Sample data has been captured (see Home Assistant section below)
-* Tensorflow Lite model has been created
-* DOODS v2 is installed and working
+* Tensorflow Lite model has been created with Teachable Machine
+* DOODS v2 is installed and working with your model
 
 # Flow
 * Camera captures image
@@ -44,7 +45,7 @@ Door Open Detection using DOODS, TensorflowLite and Home Assistant
 
 ```camera:
   - platform: proxy
-    entity_id: camera.ha_prod_northcliffe_front
+    entity_id: camera.ha_prod_home_front
     mode: crop
     max_image_height : 650
     max_image_width: 650
@@ -58,7 +59,7 @@ Door Open Detection using DOODS, TensorflowLite and Home Assistant
 * Take these snapshots and sort them into open/closed - you will upload this to Teachable Machine later
 
 ```
-alias: Timelapse - Northcliffe Front
+alias: Timelapse - home Front
 description: ""
 trigger:
   - platform: time_pattern
@@ -67,7 +68,7 @@ condition: []
 action:
   - service: camera.snapshot
     target:
-      entity_id: camera.camera_proxy_camera_ha_prod_northcliffe_front
+      entity_id: camera.camera_proxy_camera_ha_prod_home_front
     data:
       filename: >-
         /media/timelapse/daily/front/{{ now().strftime("%Y%m%d") }}/front_{{    
@@ -97,7 +98,7 @@ image_processing:
     timeout: 20
     detector: garagedoortf
     source:
-      - entity_id: camera.camera_proxy_camera_ha_prod_northcliffe_front
+      - entity_id: camera.camera_proxy_camera_ha_prod_home_front
     file_out:
       - /config/www/doods-garagedoor.jpg
     labels:
@@ -129,42 +130,42 @@ closed: 1
 
 total_matches: 2
 process_time: 0.05038406798848882
-friendly_name: Doods camera_proxy_camera_ha_prod_northcliffe_front
+friendly_name: Doods camera_proxy_camera_ha_prod_home_front
 ```
 
 # Sensors (and more sensors)
 
 * In order to work with the above, we will create some sensors with just the data we want
-* DoodsNorthcliffeGaragePersonClosed / DoodsNorthcliffeGaragePersonOpen - these are the confidence scores for open/closed
+* DoodshomeGaragePersonClosed / DoodshomeGaragePersonOpen - these are the confidence scores for open/closed
 * We've also created doods-garage-persondoor which is going to show open/closed/unknown based on the confidence score, you can fine-tune this to match your desired confidence level
 
 
 ```
 template:
   - sensor:
-      - name: "DoodsNorthcliffeGaragePersonClosed"
-        # state: {{ state_attr(image_processing.doods_camera_proxy_camera_ha_prod_northcliffe_front, 'matches') }} 
-        state: "{{ state_attr('image_processing.doods_camera_proxy_camera_ha_prod_northcliffe_front', 'matches')['closed'][0]['score'] }}"
+      - name: "DoodshomeGaragePersonClosed"
+        # state: {{ state_attr(image_processing.doods_camera_proxy_camera_ha_prod_home_front, 'matches') }} 
+        state: "{{ state_attr('image_processing.doods_camera_proxy_camera_ha_prod_home_front', 'matches')['closed'][0]['score'] }}"
         unit_of_measurement: 'confidence'
-      - name: "DoodsNorthcliffeGaragePersonOpen"
-        # state: {{ state_attr(image_processing.doods_camera_proxy_camera_ha_prod_northcliffe_front, 'matches') }} 
-        state: "{{ state_attr('image_processing.doods_camera_proxy_camera_ha_prod_northcliffe_front', 'matches')['open'][0]['score'] }}"        
+      - name: "DoodshomeGaragePersonOpen"
+        # state: {{ state_attr(image_processing.doods_camera_proxy_camera_ha_prod_home_front, 'matches') }} 
+        state: "{{ state_attr('image_processing.doods_camera_proxy_camera_ha_prod_home_front', 'matches')['open'][0]['score'] }}"        
         unit_of_measurement: 'confidence'
 #
   - sensor:
       - name: "doods-garage-persondoor"
         state: >
-          {% if states('sensor.filtered_doodsnorthcliffegaragepersonclosed')|float > 22950 %}
+          {% if states('sensor.filtered_doodshomegaragepersonclosed')|float > 22950 %}
             closed
-          {% elif states('sensor.filtered_doodsnorthcliffegaragepersonopen')|float > 22950 %}
+          {% elif states('sensor.filtered_doodshomegaragepersonopen')|float > 22950 %}
             open
           {% else %}
             unknown
           {% endif %}
         icon: >-
-          {% if states('sensor.filtered_doodsnorthcliffegaragepersonclosed')|float > 22950 %}
+          {% if states('sensor.filtered_doodshomegaragepersonclosed')|float > 22950 %}
             mdi:garage-closed
-          {% elif states('sensor.filtered_doodsnorthcliffegaragepersonopen')|float > 22950 %}
+          {% elif states('sensor.filtered_doodshomegaragepersonopen')|float > 22950 %}
             mdi:garage-open
           {% else %}
             mdi:help-rhombus
@@ -183,8 +184,8 @@ template:
 ```
 sensor:
   - platform: filter
-    name: "filtered DoodsNorthcliffeGaragePersonClosed"
-    entity_id: sensor.doodsnorthcliffegaragepersonclosed
+    name: "filtered DoodshomeGaragePersonClosed"
+    entity_id: sensor.doodshomegaragepersonclosed
     filters:
       - filter: lowpass
         time_constant: 10
@@ -192,8 +193,8 @@ sensor:
         window_size: "00:05"
         precision: 1
   - platform: filter
-    name: "filtered DoodsNorthcliffeGaragePersonOpen"
-    entity_id: sensor.doodsnorthcliffegaragepersonopen
+    name: "filtered DoodshomeGaragePersonOpen"
+    entity_id: sensor.doodshomegaragepersonopen
     filters:
       - filter: lowpass
         time_constant: 10
@@ -230,7 +231,7 @@ action:
       authentication: digest
       file: /config/www/doods-garagedoor.jpg
       caption: >-
-        Northcliffe {{trigger.entity_id}} has changed from {{
+        home {{trigger.entity_id}} has changed from {{
         trigger.from_state.state }} to {{ trigger.to_state.state }}
 mode: single
 ```
