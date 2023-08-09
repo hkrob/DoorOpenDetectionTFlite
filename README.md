@@ -6,6 +6,11 @@ Door Open Detection using DOODS, TensorflowLite and Home Assistant
 * Connect to Home Assistant, enable automations based on state of the door
 * Can be run without a Google Coral, i.e. on a normal CPU
 
+# Output
+* This is a simple dashboard to monitor the training / accuracy of your new model
+
+![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/3903df97-b8a7-4ced-9400-031c6aaefab6)
+
 # Ingredients
 * Camera facing the door (provides RTSP stream)
 * Home Assistant - https://www.home-assistant.io/
