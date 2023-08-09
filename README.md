@@ -241,7 +241,18 @@ mode: single
 
 ![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/8a97e755-f8d4-4590-8282-7cb340670176)
 
-* Use the training data you have collected with Home Assistant
+* Use the training data (open/closed photos) you have collected with Home Assistant
+* Make sure you have plenty of images, the more the better
 * Export a Tensorflow Lite Quantized model
+* Upload the model files to where you have DOODS running
 
 ![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/d3bfb113-bb4b-4cc9-92e6-ff26bcab200f)
+
+* You should have two files labels.txt & model.tflite
+* labels.txt looks like this:
+```
+0 closed
+1 open
+```
+* model.tflite is a binary file
+  
