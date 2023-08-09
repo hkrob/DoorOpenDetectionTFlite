@@ -26,6 +26,13 @@ DOODS config
 * The models from Teachable Machine have been placed in \\192.168.x.x\share\models\tflite-quant
 * Add-on configuration:
 
+`- name: garagedoortf
+  type: tflite
+  modelFile: /share/models/tflite-quant/model.tflite
+  labelFile: /share/models/tflite-quant/labels.txt
+  hwAccel: false
+  labelsStartFromZero: true`
+
 Model from Teachable Machine
 * Using [Teachable Machine]([url](https://teachablemachine.withgoogle.com/)) ...
 * Create a model with two classes, open and closed
