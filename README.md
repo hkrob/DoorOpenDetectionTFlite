@@ -39,8 +39,8 @@ There are a few steps here, first is to capture the input data to train your mod
 
 * First, create a camera which is focussed on the area you want to monitor, in this case, the door
 * Teachable Machine expects a square shaped input, so make sure the height/width are the same
-'''
-camera:
+
+```camera:
   - platform: proxy
     entity_id: camera.ha_prod_northcliffe_front
     mode: crop
@@ -48,13 +48,13 @@ camera:
     max_image_width: 650
     image_left: 102
     image_top: 1182
-'''
+```
 * I've created an automation to take a snapshot every minute
 * You will want to run this for a couple of days to gather enough training data
 * Also, try to open/close the door now and then so you can get samples of both
 * Take these snapshots and sort them into open/closed - you will upload this to Teachable Machine later
 
-'''
+```
 alias: Timelapse - Northcliffe Front
 description: ""
 trigger:
@@ -70,13 +70,21 @@ action:
         /media/timelapse/daily/front/{{ now().strftime("%Y%m%d") }}/front_{{    
         now().strftime("%Y%m%d-%H%M%S") }}.jpg
 mode: single
-'''
+```
+
+My training data looks like this:
+Closed
+![front_20230802-191800](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/0d51b79e-81e3-4aef-8c67-359551901e16)
+
+Open
+![front_20230803-113600](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/be8bc8f7-7612-425e-aded-80177ac2db66)
+
 
 * Call DOODS via the image processing integration
 ** The below will send the image to Doods every 10 seconds
 ** The labels will need to be the same as you set in Teachable Machine
 
-'''
+```
 image_processing:
   - platform: doods
     scan_interval: 10
@@ -90,10 +98,10 @@ image_processing:
     labels:
       - name: closed
       - name: open
-'''
+```
 
 Image Processing will give you a sensor that looks like this:
-'''
+```
 matches: 
 open:
   - score: 25500
@@ -117,14 +125,14 @@ closed: 1
 total_matches: 2
 process_time: 0.05038406798848882
 friendly_name: Doods camera_proxy_camera_ha_prod_northcliffe_front
-'''
+```
 
 * In order to work with the above, we will create some sensors with just the data we want
 ** DoodsNorthcliffeGaragePersonClosed / DoodsNorthcliffeGaragePersonOpen - these are the confidence scores for open/closed
 ** We've also created doods-garage-persondoor which is going to show open/closed/unknown based on the confidence score, you can fine-tune this to match your desired confidence level
 
 
-'''
+```
 template:
   - sensor:
       - name: "DoodsNorthcliffeGaragePersonClosed"
@@ -155,7 +163,36 @@ template:
             mdi:help-rhombus
           {% endif %}           
 #
-'''
+```
+
+The above will create sensors that look like this:
+![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/e7e88217-f0df-4b32-8a63-fb8243745bba)
+With this model, 25500 is the maximum, i.e. 100% confidence
+
+I want to smooth the sensor, so I've created yet another sensor
+For more details on this, check the documentation https://www.home-assistant.io/integrations/filter/
+```
+sensor:
+  - platform: filter
+    name: "filtered DoodsNorthcliffeGaragePersonClosed"
+    entity_id: sensor.doodsnorthcliffegaragepersonclosed
+    filters:
+      - filter: lowpass
+        time_constant: 10
+      - filter: time_simple_moving_average
+        window_size: "00:05"
+        precision: 1
+  - platform: filter
+    name: "filtered DoodsNorthcliffeGaragePersonOpen"
+    entity_id: sensor.doodsnorthcliffegaragepersonopen
+    filters:
+      - filter: lowpass
+        time_constant: 10
+      - filter: time_simple_moving_average
+        window_size: "00:01"
+        precision: 1
+```        
+
 
 Model from Teachable Machine
 * Using [Teachable Machine]([url](https://teachablemachine.withgoogle.com/)) ...
