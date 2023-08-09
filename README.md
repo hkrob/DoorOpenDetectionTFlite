@@ -197,6 +197,38 @@ sensor:
         precision: 1
 ```        
 
+* This will create sensors that look like this
+
+![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/db98fa55-658f-443d-af2a-111123d42254)
+
+* Notifications
+You might want notifications when something happens, here I am sending a notification via Telegram, including a snapshot of the current camera status
+
+```
+alias: Doods - Notify
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.doods_garage_persondoor
+    to: null
+condition: []
+action:
+  - service: notify.notifytelegram
+    data:
+      message: >-
+        {{trigger.entity_id}} has changed from {{ trigger.from_state.state }} to
+        {{ trigger.to_state.state }}
+      title: Doods
+  - service: telegram_bot.send_photo
+    data:
+      authentication: digest
+      file: /config/www/doods-garagedoor.jpg
+      caption: >-
+        Northcliffe {{trigger.entity_id}} has changed from {{
+        trigger.from_state.state }} to {{ trigger.to_state.state }}
+mode: single
+```
 
 Model from Teachable Machine
 * Using [Teachable Machine]([url](https://teachablemachine.withgoogle.com/)) ...
