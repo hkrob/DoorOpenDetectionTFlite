@@ -9,7 +9,7 @@ Door Open Detection using DOODS, TensorflowLite and Home Assistant
 # Output
 * This is a simple dashboard to monitor the training / accuracy of your new model
 
-![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/836701a7-e3c3-46ff-8da6-2dd573f58124)
+![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/ca70d571-b58f-4ed6-b8aa-30e82e24e890)
 
 # Ingredients
 * Camera facing the door (provides RTSP stream)
@@ -253,7 +253,7 @@ sensor:
       - filter: lowpass
         time_constant: 10
       - filter: time_simple_moving_average
-        window_size: "00:01"
+        window_size: "00:05"
         precision: 1
 ```        
 
