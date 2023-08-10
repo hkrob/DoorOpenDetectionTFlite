@@ -11,6 +11,13 @@ Door Open Detection using DOODS, TensorflowLite and Home Assistant
 
 ![image](https://github.com/hkrob/DoorOpenDetectionTFlite/assets/10833368/ca70d571-b58f-4ed6-b8aa-30e82e24e890)
 
+# Notes /  FAQ
+* Can I run two add-ons using the Edge TPU at the same time? e.g. Doods + Frigate?
+I tried and it appears the answer is no.
+I had Frigate running and tried starting Doods with TPU, can't detect TPU.
+Stop Frigate, start Doods --> All OK.
+So, appears TPU is exclusive to one add-on at a time.
+
 # Ingredients
 * Camera facing the door (provides RTSP stream)
 * Home Assistant - https://www.home-assistant.io/
