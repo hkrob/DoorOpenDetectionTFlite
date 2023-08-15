@@ -45,6 +45,10 @@ So, appears TPU is exclusive to one add-on at a time.
 * Image is processed by DOODS
 * Sensors are updated in Home Assistant
 
+# Create your model using Google Colab
+* Note, using Teachable Machine is easier - see below
+* If you want to use Google Colab to train your model, here is a Juypter Notebook which worked for me [link](https://github.com/hkrob/DoorOpenDetectionTFlite/blob/main/doorStateTrainer.ipynb)
+
 # Create your model with Teachable Machine
 * Using [Teachable Machine]([url](https://teachablemachine.withgoogle.com/)) You will create a model from Teachable Machine
 * Create a model with two classes, open and closed
